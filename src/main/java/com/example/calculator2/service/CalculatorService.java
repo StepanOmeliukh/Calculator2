@@ -1,16 +1,19 @@
 package com.example.calculator2.service;
 
-import com.example.calculator2.entity.Calculator;
-import org.springframework.ui.Model;
-
-import java.util.List;
-import java.util.Optional;
+import com.example.calculator2.dto.CalculatorDto;
 
 /**
  *
  */
 public interface CalculatorService {
 
-    void save(Calculator calculator);
-    Calculator calculate(Calculator calculator);
+    boolean checkValuesAndOperation(CalculatorDto calculatorDto);
+
+    void sum(CalculatorDto calculatorDto);
+
+    void sub(CalculatorDto calculatorDto);
+
+    void div(CalculatorDto calculatorDto);
+
+    void mul(CalculatorDto calculatorDto);
 }

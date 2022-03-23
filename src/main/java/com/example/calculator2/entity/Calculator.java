@@ -12,11 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "calculator")
-@Getter
-@Setter
-@ToString
 @ApiModel(value = "Calculator entity")
-@Builder
 public class Calculator {
 
     @Id
