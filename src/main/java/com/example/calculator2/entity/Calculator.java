@@ -13,6 +13,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "calculator")
 @ApiModel(value = "Calculator entity")
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Calculator {
 
     @Id

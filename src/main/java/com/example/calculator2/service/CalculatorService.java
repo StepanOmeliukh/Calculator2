@@ -2,18 +2,23 @@ package com.example.calculator2.service;
 
 import com.example.calculator2.dto.CalculatorDto;
 
-/**
- *
- */
+import java.util.List;
+import java.util.Optional;
+
 public interface CalculatorService {
 
-    boolean checkValuesAndOperation(CalculatorDto calculatorDto);
+    boolean checkValues(CalculatorDto calculatorDto);
 
-    void sum(CalculatorDto calculatorDto);
+    CalculatorDto sum(CalculatorDto calculatorDto);
 
-    void sub(CalculatorDto calculatorDto);
+    CalculatorDto sub(CalculatorDto calculatorDto);
 
-    void div(CalculatorDto calculatorDto);
+    CalculatorDto div(CalculatorDto calculatorDto);
 
-    void mul(CalculatorDto calculatorDto);
+    CalculatorDto mul(CalculatorDto calculatorDto);
+
+    List<CalculatorDto> getAllCalculates();
+
+    Optional<CalculatorDto> getCalculatesById(Long id);
+
 }
