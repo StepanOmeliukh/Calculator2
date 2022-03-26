@@ -7,8 +7,11 @@ import com.example.calculator2.service.CalculatorService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -16,77 +19,71 @@ import org.springframework.stereotype.Service;
 public class CalculatorServiceImpl implements CalculatorService {
 
     private final CalculatorRepository repository;
-    private final Calculator calculator;
 
     private final ModelMapper modelMapper;
 
-//    @Override
-//    public Calculator calculate(Calculator calculator) {
-//        if (calculator.getFirstValue() != null
-//                && calculator.getSecondValue() != null
-//                && calculator.getOperation() != null) {
-//            switch (calculator.getOperation()) {
-//                case "sum" :
-//                    sum(calculator);
-//                    break;
-//                case "sub" :
-//                    sub(calculator);
-//                    break;
-//                case "div" :
-//                    div(calculator);
-//                    break;
-//                case "mul" :
-//                    mul(calculator);
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//        return calculator;
-//    }
-
-    public boolean checkValuesAndOperation(CalculatorDto calculatorDto) {
-        if (calculatorDto.getFirstValue() != null
-                && calculatorDto.getSecondValue() != null
-                && calculatorDto.getOperation() != null)
-            return true;
-        return false;
-    }
-
-    public void sum(CalculatorDto calculatorDto) {
+    public CalculatorDto sum(CalculatorDto calculatorDto) {
         Double sum = calculatorDto.getFirstValue() + calculatorDto.getSecondValue();
         calculatorDto.setResult(sum);
-//        repository.save(calculatorDto);
-        log.info("Sum, result: {}", sum);
+        calculatorDto.setOperation("sum");
+        saveDataToDB(calculatorDto);
+        log.info("Method sum calculate sum of two values and return result {}", calculatorDto.getResult());
+        return calculatorDto;
     }
 
-    public void sub(CalculatorDto calculatorDto) {
+    public CalculatorDto sub(CalculatorDto calculatorDto) {
         Double sub = calculatorDto.getFirstValue() - calculatorDto.getSecondValue();
         calculatorDto.setResult(sub);
-//        repository.save(calculatorDto);
-        log.info("Sub, result: {}", sub);
+        calculatorDto.setOperation("sub");
+        saveDataToDB(calculatorDto);
+        log.info("Method sub calculate sum of two values and return result {}", calculatorDto.getResult());
+        return calculatorDto;
     }
 
-    public void div(CalculatorDto calculatorDto) {
+    public CalculatorDto div(CalculatorDto calculatorDto) throws IllegalArgumentException {
         if (calculatorDto.getSecondValue() == 0) {
-            log.info("Div method. You can't divide on zero");
-            return;
+            log.info("Method div can't calculate division on zero");
+            throw new IllegalArgumentException("You can't devide on zero");
         }
         Double div = calculatorDto.getFirstValue() / calculatorDto.getSecondValue();
         calculatorDto.setResult(div);
-//        repository.save(calculatorDto);
-        log.info("Div, result: {}", div);
+        calculatorDto.setOperation("div");
+        saveDataToDB(calculatorDto);
+        log.info("Method div calculate sum of two values and return result {}", calculatorDto.getResult());
+        return calculatorDto;
     }
 
-    public void mul(CalculatorDto calculatorDto) {
+    public CalculatorDto mul(CalculatorDto calculatorDto) {
         Double mul = calculatorDto.getFirstValue() * calculatorDto.getSecondValue();
         calculatorDto.setResult(mul);
-//        repository.save(calculatorDto);
-        log.info("Mul, result: {}", mul);
+        calculatorDto.setOperation("mul");
+        saveDataToDB(calculatorDto);
+        log.info("Method mul calculate sum of two values and return result {}", calculatorDto.getResult());
+        return calculatorDto;
     }
 
-//    public void saveDataToDB(CalculatorDto calculatorDto) {
-//        modelMapper.map(calculatorDto, Calculator.class);
-//        modelMapper.map(repository.save(calculator));
-//    }
+    public List<CalculatorDto> getAllCalculates() {
+        List<Calculator> calculators = repository.findAll();
+        return Arrays.asList(modelMapper.map(calculators, CalculatorDto[].class));
+    }
+
+    public Optional<CalculatorDto> getCalculatesById(Long id) {
+        return repository.findById(id)
+                .map(calculator -> new CalculatorDto(
+                        calculator.getFirstValue(),
+                        calculator.getSecondValue(),
+                        calculator.getOperation(),
+                        calculator.getResult()
+                ));
+    }
+
+    public boolean checkValues(CalculatorDto calculatorDto) {
+        return calculatorDto.getFirstValue() != null
+                && calculatorDto.getSecondValue() != null;
+    }
+
+    public void saveDataToDB(CalculatorDto calculatorDto) {
+        Calculator calculator = modelMapper.map(calculatorDto, Calculator.class);
+        repository.save(calculator);
+    }
 }
